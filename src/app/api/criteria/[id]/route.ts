@@ -1,132 +1,146 @@
+// app/api/criteria/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { criteriaWeights } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-// GET /api/criteria/[id] - Get criteria weights by ID
+// GET a specific criteria weight by ID
 export async function GET(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const id = parseInt(params.id);
+
     if (isNaN(id)) {
       return NextResponse.json(
-        { error: "Invalid criteria weights ID" },
+        { error: "Invalid criteria ID" },
         { status: 400 }
       );
     }
 
-    const criteriaWeight = await db.query.criteriaWeights.findFirst({
+    const criteria = await db.query.criteriaWeights.findFirst({
       where: eq(criteriaWeights.id, id),
       with: {
-        course: true,
+        course: {
+          columns: {
+            id: true,
+            name: true,
+            code: true,
+          },
+        },
       },
     });
 
-    if (!criteriaWeight) {
+    if (!criteria) {
       return NextResponse.json(
         { error: "Criteria weights not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(criteriaWeight);
+    return NextResponse.json({
+      ...criteria,
+      courseName: criteria.course?.name || "Unknown Course",
+      courseCode: criteria.course?.code || "Unknown Code",
+    });
   } catch (error) {
-    console.error("Error fetching criteria weights:", error);
+    console.error("[CRITERIA_GET_BY_ID]", error);
     return NextResponse.json(
-      { error: "Failed to fetch criteria weights" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/criteria/[id] - Update criteria weights
+// PUT to update criteria weights by ID
 export async function PUT(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const id = parseInt(params.id);
+
     if (isNaN(id)) {
       return NextResponse.json(
-        { error: "Invalid criteria weights ID" },
+        { error: "Invalid criteria ID" },
         { status: 400 }
       );
     }
 
-    const body = await request.json();
+    const body = await req.json();
     const { c1Weight, c2Weight, c3Weight, c4Weight, c5Weight } = body;
 
-    // Check if criteria weights exist
-    const existingCriteriaWeights = await db.query.criteriaWeights.findFirst({
+    // Check if criteria exists
+    const criteria = await db.query.criteriaWeights.findFirst({
       where: eq(criteriaWeights.id, id),
     });
 
-    if (!existingCriteriaWeights) {
+    if (!criteria) {
       return NextResponse.json(
         { error: "Criteria weights not found" },
         { status: 404 }
       );
     }
 
-    const updatedCriteriaWeights = await db
+    // Update criteria weights
+    const updatedCriteria = await db
       .update(criteriaWeights)
       .set({
-        c1Weight: c1Weight ?? existingCriteriaWeights.c1Weight,
-        c2Weight: c2Weight ?? existingCriteriaWeights.c2Weight,
-        c3Weight: c3Weight ?? existingCriteriaWeights.c3Weight,
-        c4Weight: c4Weight ?? existingCriteriaWeights.c4Weight,
-        c5Weight: c5Weight ?? existingCriteriaWeights.c5Weight,
+        c1Weight: c1Weight !== undefined ? c1Weight : criteria.c1Weight,
+        c2Weight: c2Weight !== undefined ? c2Weight : criteria.c2Weight,
+        c3Weight: c3Weight !== undefined ? c3Weight : criteria.c3Weight,
+        c4Weight: c4Weight !== undefined ? c4Weight : criteria.c4Weight,
+        c5Weight: c5Weight !== undefined ? c5Weight : criteria.c5Weight,
       })
       .where(eq(criteriaWeights.id, id))
       .returning();
 
-    return NextResponse.json(updatedCriteriaWeights[0]);
+    return NextResponse.json(updatedCriteria[0]);
   } catch (error) {
-    console.error("Error updating criteria weights:", error);
+    console.error("[CRITERIA_PUT]", error);
     return NextResponse.json(
-      { error: "Failed to update criteria weights" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/criteria/[id] - Delete criteria weights
+// DELETE criteria weights by ID
 export async function DELETE(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const id = parseInt(params.id);
+
     if (isNaN(id)) {
       return NextResponse.json(
-        { error: "Invalid criteria weights ID" },
+        { error: "Invalid criteria ID" },
         { status: 400 }
       );
     }
 
-    // Check if criteria weights exist
-    const criteriaWeight = await db.query.criteriaWeights.findFirst({
+    // Check if criteria exists
+    const criteria = await db.query.criteriaWeights.findFirst({
       where: eq(criteriaWeights.id, id),
     });
 
-    if (!criteriaWeight) {
+    if (!criteria) {
       return NextResponse.json(
         { error: "Criteria weights not found" },
         { status: 404 }
       );
     }
 
+    // Delete criteria weights
     await db.delete(criteriaWeights).where(eq(criteriaWeights.id, id));
 
-    return NextResponse.json({
-      message: "Criteria weights deleted successfully",
-    });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting criteria weights:", error);
+    console.error("[CRITERIA_DELETE]", error);
     return NextResponse.json(
-      { error: "Failed to delete criteria weights" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

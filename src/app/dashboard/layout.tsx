@@ -17,7 +17,7 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} />
 
@@ -30,16 +30,18 @@ export default function DashboardLayout({
       )}
 
       {/* Main content */}
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 w-full overflow-hidden ml-0 lg:ml-64">
         <Header toggleSidebar={toggleSidebar} />
 
         <main className="flex-1 overflow-y-auto">
-          <div className="container mx-auto px-4 py-6">{children}</div>
+          <div className="container max-w-7xl mx-auto px-4 py-6">
+            {children}
+          </div>
         </main>
 
-        <footer className="py-4 bg-white border-t border-gray-200">
-          <div className="container mx-auto px-4">
-            <p className="text-sm text-center text-gray-500">
+        <footer className="py-4 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+          <div className="container max-w-7xl mx-auto px-4">
+            <p className="text-sm text-center text-gray-500 dark:text-gray-400">
               &copy; {new Date().getFullYear()} Teaching Assistant Selection
               System. All rights reserved.
             </p>

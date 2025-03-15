@@ -1,3 +1,4 @@
+// app/api/assessments/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { assessments, candidates, courses } from "@/db/schema";

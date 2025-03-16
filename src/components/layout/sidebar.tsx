@@ -26,12 +26,16 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Candidates", href: "/candidates", icon: Users },
-    { name: "Courses", href: "/courses", icon: BookOpen },
-    { name: "Assessments", href: "/assessments", icon: ClipboardCheck },
-    { name: "Reports", href: "/reports", icon: BarChart2 },
-    { name: "Messages", href: "/messages", icon: Mail },
-    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "Candidates", href: "/dashboard/candidates", icon: Users },
+    { name: "Courses", href: "/dashboard/courses", icon: BookOpen },
+    {
+      name: "Assessments",
+      href: "/dashboard/assessments",
+      icon: ClipboardCheck,
+    },
+    { name: "Reports", href: "/dashboard/reports", icon: BarChart2 },
+    { name: "Messages", href: "/dashboard/messages", icon: Mail },
+    { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
   return (

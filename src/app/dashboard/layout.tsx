@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import Header from "@/components/layout/header";
 import Sidebar from "@/components/layout/sidebar";
-
+import { Toaster } from "react-hot-toast";
 export default function DashboardLayout({
   children,
 }: {
@@ -19,6 +19,7 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
+      <Toaster position="bottom-right" />
       <Sidebar isOpen={sidebarOpen} />
 
       {/* Sidebar overlay */}

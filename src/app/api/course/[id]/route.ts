@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
-import { courses } from "@/db/schema";
+import { courses, assessments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 // Helper function to get course by ID
@@ -20,7 +20,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(await params.id); // Use await here
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid course ID" }, { status: 400 });
     }
@@ -46,7 +46,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(await params.id); // Use await here
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid course ID" }, { status: 400 });
     }
@@ -108,7 +108,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(await params.id); // Use await here
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid course ID" }, { status: 400 });
     }
@@ -118,6 +118,7 @@ export async function DELETE(
     if (!course) {
       return NextResponse.json({ error: "Course not found" }, { status: 404 });
     }
+    await db.delete(assessments).where(eq(assessments.candidateId, id));
 
     // Delete course (related criteria weights and assessment periods will cascade delete based on schema)
     await db.delete(courses).where(eq(courses.id, id));

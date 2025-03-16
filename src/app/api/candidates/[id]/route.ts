@@ -120,7 +120,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(await params.id); // Use await here
     if (isNaN(id)) {
       return NextResponse.json(
         { error: "Invalid candidate ID" },
@@ -136,6 +136,7 @@ export async function DELETE(
         { status: 404 }
       );
     }
+    await db.delete(assessments).where(eq(assessments.candidateId, id));
 
     // Delete candidate (related assessments will cascade delete based on schema)
     await db.delete(candidates).where(eq(candidates.id, id));

@@ -33,7 +33,7 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
       href: "/dashboard/assessments",
       icon: ClipboardCheck,
     },
-    { name: "Reports", href: "/dashboard/reports", icon: BarChart2 },
+    { name: "Calculation", href: "/dashboard/calculation", icon: BarChart2 },
     { name: "Messages", href: "/dashboard/messages", icon: Mail },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];

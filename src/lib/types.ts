@@ -71,3 +71,9 @@ export type SAWResult = {
   preferenceValues: PreferenceValue[];
   weights: CriteriaWeight;
 };
+
+export interface SelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}

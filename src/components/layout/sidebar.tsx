@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
+
 type SidebarProps = {
   isOpen: boolean;
   className?: string;
@@ -81,7 +82,6 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
             );
           })}
         </nav>
-
         <div className="px-4 mt-6">
           <button className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
             <LogOut className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
@@ -99,5 +99,6 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
         </div>
       </div>
     </aside>
+    
   );
 }

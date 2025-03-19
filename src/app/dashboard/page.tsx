@@ -1,7 +1,8 @@
 // src/app/dashboard/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   User,
   Users,
@@ -10,6 +11,7 @@ import {
   BarChart,
   Award,
   TrendingUp,
+  LogOut,
 } from "lucide-react";
 import StatsCard from "@/components/dashboard/stats-card";
 import RecentCandidates from "@/components/dashboard/recent-candidates";
@@ -17,6 +19,7 @@ import { type StatCard } from "@/lib/types";
 import { cn } from "@/lib/utils/cn";
 
 export default function Dashboard() {
+  const router = useRouter();
   const [stats, setStats] = useState<StatCard[]>([
     {
       title: "Total Candidates",
@@ -45,6 +48,22 @@ export default function Dashboard() {
   ]);
   const [recentCandidates, setRecentCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth-test");
+        if (!res.ok) {
+          // Not authenticated, redirect to login
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Authentication check failed:", error);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -81,16 +100,6 @@ export default function Dashboard() {
             },
           ]);
         }
-
-        // Fetch recent candidates
-        const candidatesResponse = await fetch(
-          "/api/dashboard/recent-candidates"
-        );
-        const candidatesData = await candidatesResponse.json();
-
-        if (candidatesData.success) {
-          setRecentCandidates(candidatesData.data);
-        }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -111,9 +120,11 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-        Dashboard
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Dashboard
+        </h1>
+      </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => (
@@ -122,7 +133,87 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <RecentCandidates candidates={recentCandidates} />
+        <div className="bg-white dark:bg-gray-950 rounded-lg shadow">
+          <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800">
+            <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+              SAW Method Calculation Details
+            </h3>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="p-4 rounded-md border border-gray-200 dark:border-gray-800">
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                Formula for Normalization
+              </h3>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                For benefit criteria: r<sub>ij</sub> = X<sub>ij</sub> / Max(X
+                <sub>i</sub>)
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                For cost criteria: r<sub>ij</sub> = Min(X<sub>i</sub>) / X
+                <sub>ij</sub>
+              </p>
+            </div>
+
+            <div className="p-4 rounded-md border border-gray-200 dark:border-gray-800">
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                Weight Distribution
+              </h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • IPK (C1): 3 points - High importance
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • Programming Test (C2): 2 points - Medium importance
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • Teaching Ability (C3): 2 points - Medium importance
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • Reference Value (C4): 2 points - Medium importance
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • Teamwork (C5): 3 points - High importance
+              </p>
+            </div>
+
+            <div className="p-4 rounded-md border border-gray-200 dark:border-gray-800">
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                Preference Value Calculation
+              </h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                V<sub>i</sub> = Σ w<sub>j</sub> × r<sub>ij</sub>
+              </p>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                The candidate with the highest V<sub>i</sub> value is
+                recommended as the best teaching assistant candidate for the
+                selected course.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-md border border-gray-200 dark:border-gray-800">
+              <h3 className="font-medium text-gray-900 dark:text-white">
+                Criteria Rating Scale
+              </h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                All criteria are rated on a scale of 1-5:
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • 5: Excellent (86-100 score or IPK 3.81-4.00)
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • 4: Very Good (76-85 score or IPK 3.51-3.80)
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • 3: Good (66-75 score or IPK 3.31-3.50)
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • 2: Fair (51-65 score or IPK 3.00-3.30)
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                • 1: Poor (≤50 score or IPK &lt;3.00)
+              </p>
+            </div>
+          </div>
+        </div>
 
         <div className="bg-white dark:bg-gray-950 rounded-lg shadow">
           <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800">

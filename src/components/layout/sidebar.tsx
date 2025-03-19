@@ -3,7 +3,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
-
 type SidebarProps = {
   isOpen: boolean;
   className?: string;
@@ -24,7 +23,7 @@ type SidebarProps = {
 
 export default function Sidebar({ isOpen, className }: SidebarProps) {
   const pathname = usePathname();
-
+  const router = useRouter();
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Candidates", href: "/dashboard/candidates", icon: Users },
@@ -35,10 +34,21 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
       icon: ClipboardCheck,
     },
     { name: "Calculation", href: "/dashboard/calculation", icon: BarChart2 },
-    { name: "Messages", href: "/dashboard/messages", icon: Mail },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/user/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
 
+      if (response.ok) {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
   return (
     <aside
       className={cn(
@@ -50,7 +60,7 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
     >
       <div className="flex items-center justify-center px-6 mb-6">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-          TA Selection
+          SPK-ASDOS
         </h1>
       </div>
 
@@ -83,7 +93,10 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
           })}
         </nav>
         <div className="px-4 mt-6">
-          <button className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+          >
             <LogOut className="w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
             Logout
           </button>
@@ -91,14 +104,13 @@ export default function Sidebar({ isOpen, className }: SidebarProps) {
           <div className="pt-4 mt-6 border-t border-gray-200 dark:border-gray-800">
             <div className="px-4">
               <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                Version
+                Make with depression
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">v1.0.0</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">VERDEX</p>
             </div>
           </div>
         </div>
       </div>
     </aside>
-    
   );
 }

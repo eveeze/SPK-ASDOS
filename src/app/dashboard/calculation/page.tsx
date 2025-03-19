@@ -14,14 +14,31 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { type SAWResult } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 export default function CalculationPage() {
+  const router = useRouter();
   const [courses, setCourses] = useState<{ id: number; name: string }[]>([]);
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [sawResult, setSawResult] = useState<SAWResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRecalculating, setIsRecalculating] = useState<boolean>(false);
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth-test");
+        if (!res.ok) {
+          // Not authenticated, redirect to login
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Authentication check failed:", error);
+        router.push("/login");
+      }
+    };
 
+    checkAuth();
+  }, [router]);
   // Fetch courses on component mount
   useEffect(() => {
     const fetchCourses = async () => {

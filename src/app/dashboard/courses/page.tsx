@@ -56,6 +56,22 @@ export default function CoursesPage() {
     code: "",
     name: "",
   });
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth-test");
+        if (!res.ok) {
+          // Not authenticated, redirect to login
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Authentication check failed:", error);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   // Fetch courses on load
   useEffect(() => {

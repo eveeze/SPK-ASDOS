@@ -39,6 +39,22 @@ export default function CandidatesPage() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth-test");
+        if (!res.ok) {
+          // Not authenticated, redirect to login
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Authentication check failed:", error);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   const fetchCandidates = async () => {
     setIsLoading(true);
@@ -227,7 +243,6 @@ export default function CandidatesPage() {
     router.push(`/dashboard/candidates/${id}`);
   };
 
-  
   return (
     <div className="container mx-auto px-4 py-8">
       <Toaster position="top-right" />

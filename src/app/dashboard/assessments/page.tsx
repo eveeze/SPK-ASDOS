@@ -42,6 +42,22 @@ export default function AssessmentsPage() {
   const [assessmentToDelete, setAssessmentToDelete] = useState<number | null>(
     null
   );
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth-test");
+        if (!res.ok) {
+          // Not authenticated, redirect to login
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Authentication check failed:", error);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   // Get courseId from URL params
   useEffect(() => {

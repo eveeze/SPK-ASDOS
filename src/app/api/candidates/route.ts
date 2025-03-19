@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
-import { candidates, assessments } from "@/db/schema";
+import { candidates } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 // GET /api/candidates - Get all candidates

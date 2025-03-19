@@ -1,7 +1,6 @@
 // components/ui/assessmentDialog.tsx
 "use client";
 
-import { useState } from "react";
 import { X, Save, Trash2 } from "lucide-react";
 import { Assessment, SelectOption } from "@/lib/types";
 import { Input } from "@/components/ui/input";
@@ -28,7 +27,6 @@ export const AssessmentDialog = ({
   isOpen,
   onClose,
   title,
-  currentAssessment,
   formValues,
   onInputChange,
   onSubmit,

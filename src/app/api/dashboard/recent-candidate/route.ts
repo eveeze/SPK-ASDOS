@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { candidates, assessments, courses } from "@/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export async function GET() {
   try {

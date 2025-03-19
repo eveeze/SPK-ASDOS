@@ -4,19 +4,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  User,
   Users,
   BookOpen,
   ClipboardCheck,
   BarChart,
   Award,
   TrendingUp,
-  LogOut,
 } from "lucide-react";
 import StatsCard from "@/components/dashboard/stats-card";
-import RecentCandidates from "@/components/dashboard/recent-candidates";
 import { type StatCard } from "@/lib/types";
-import { cn } from "@/lib/utils/cn";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -46,7 +42,6 @@ export default function Dashboard() {
       icon: BarChart,
     },
   ]);
-  const [recentCandidates, setRecentCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const checkAuth = async () => {

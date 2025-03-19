@@ -139,10 +139,10 @@ export async function PUT(
 // DELETE an assessment by ID
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: Promise<string> } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(await params.id);
 
     if (isNaN(id)) {
       return NextResponse.json(
@@ -151,7 +151,7 @@ export async function DELETE(
       );
     }
 
-    // Check if assessment exists
+    // Cek apakah assessment ada
     const assessment = await db.query.assessments.findFirst({
       where: eq(assessments.id, id),
     });
@@ -163,7 +163,7 @@ export async function DELETE(
       );
     }
 
-    // Delete assessment
+    // Hapus assessment
     await db.delete(assessments).where(eq(assessments.id, id));
 
     return NextResponse.json({ success: true });

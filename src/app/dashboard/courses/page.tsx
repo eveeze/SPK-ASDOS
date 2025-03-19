@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { cn } from "@/lib/utils/cn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,7 +15,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import type { Course, CriteriaWeight } from "@/lib/types";
+import type { Course } from "@/lib/types";
 
 interface FormData {
   code: string;
@@ -528,8 +527,9 @@ export default function CoursesPage() {
               Confirm Delete
             </h2>
             <p className="mb-6 text-gray-700 dark:text-gray-300">
-              Are you sure you want to delete the course "{currentCourse.name}"
-              ({currentCourse.code})? This action cannot be undone.
+              Are you sure you want to delete the course &quot;
+              {currentCourse.name}&quot; ({currentCourse.code})? This action
+              cannot be undone.
             </p>
             <div className="flex justify-end space-x-3">
               <Button

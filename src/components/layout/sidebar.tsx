@@ -9,10 +9,8 @@ import {
   Users,
   BookOpen,
   ClipboardCheck,
-  Settings,
   LogOut,
   BarChart2,
-  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 

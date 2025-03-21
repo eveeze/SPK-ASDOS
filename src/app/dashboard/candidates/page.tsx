@@ -245,8 +245,6 @@ export default function CandidatesPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Toaster position="top-right" />
-
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Candidate Management
